@@ -1,0 +1,56 @@
+@import '@styles/variables';
+
+.dropdown {
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+    width: 295px;
+    line-height: 114%;
+    color: $light-gray;
+    @include gray-border(1px, 6px);
+    transition: border, opacity .2s ease-in;
+
+    &.focus {
+        border: 1px solid $primary;
+    }
+
+    &.disabled {
+        opacity: 0.7;
+    }
+}
+
+.title {
+    padding: 17px 12px;
+    line-height: 114%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.selectable {
+    position: absolute;
+    content: '';
+    width: 295px;
+    left: 0;
+    top: 58px;
+    border: 1px solid var(--gray-border);
+    border-radius: 6px;
+}
+
+.select {
+    cursor: pointer;
+    width: 100%;
+    padding: 17px 12px;
+    line-height: 114%;
+    color: $light-gray;
+    border-bottom: 1px solid $gray-border;
+    transition: border, opacity .2s ease-in;
+
+    &:last-child {
+        border-bottom: none;
+    }
+
+    &.selected {
+        background-color: #F1F1F1;
+    }
+}

@@ -1,0 +1,23 @@
+$light-gray: #7E7E7E;
+$primary: #FF5555;
+$gray-border: #D9D9D9;
+
+@mixin gray-border($border , $radius) {
+  @if $border {
+    border: $border solid $gray-border;
+    @if $radius {
+      border-radius: $radius;
+    }
+  } @else {
+    border: 1px solid $gray-border;
+    @if $radius {
+      border-radius: $radius;
+    }
+  }
+}
+
+@mixin text-wrap-off() {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}

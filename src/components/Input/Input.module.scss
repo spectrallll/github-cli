@@ -1,0 +1,19 @@
+@import '@styles/variables';
+
+.input {
+    width: 100%;
+    padding: 17px 12px;
+    line-height: 114%;
+    color: $light-gray;
+    @include gray-border(1px, 6px);
+    transition: border, opacity .2s ease-in;
+
+    &:focus {
+        border: 1px solid $primary;
+    }
+
+    &.disabled {
+        opacity: 0.7;
+    }
+
+}

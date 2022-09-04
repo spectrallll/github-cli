@@ -1,0 +1,30 @@
+@import '@stylesvariables';
+
+
+
+.inputCheck:focus .checkbox {
+    border: 1px solid $primary;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: white;
+    width: 30px;
+    height: 30px;
+    @include gray-border(1px, 6px);
+
+    svg {
+        margin-bottom: 5px;
+    }
+}
+
+.active {
+    border: 1px solid $primary;
+}
+
+.disabled {
+    opacity: 0.7;
+}
+

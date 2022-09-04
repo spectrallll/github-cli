@@ -1,0 +1,22 @@
+@import "@styles/variables";
+
+.sample {
+  width: 100%;
+  padding: 17px 12px;
+  line-height: 114%;
+  color: $light-gray;
+  @include gray-border(1px, 6px);
+
+  .title {
+    color: black;
+    & + * {
+      margin-left: 15px;
+    }
+  }
+
+  a {
+    color: #208FBF;
+  }
+
+
+}

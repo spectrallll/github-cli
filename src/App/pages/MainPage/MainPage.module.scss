@@ -1,0 +1,70 @@
+.container {
+  width: 100%;
+  padding-top: 25px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  row-gap: 45px;
+  grid-template-rows: auto;
+  grid-template-areas:
+    "form form form"
+    "repos repos repos"
+    "repos repos repos";
+
+  @media (max-width: 767px) {
+    row-gap: 20px;
+  }
+}
+
+.filters {
+  grid-area: form;
+}
+
+.sort {
+  margin-top: 15px;
+}
+
+.repos {
+  position: relative;
+  grid-area: repos;
+  width: 100%;
+  & > div {
+    ::-webkit-scrollbar {
+      display: none;
+    }
+
+    ::-webkit-scrollbar-track {
+      display: none;
+    }
+  }
+}
+
+.columns {
+
+  position: relative;
+  overflow: scroll;
+  display: grid;
+  gap: 25px;
+  grid-template-columns: repeat(3, minmax(312px, 1fr));
+  @media (max-width: 1070px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 703px) {
+    grid-template-columns: 100%;
+  }
+
+}
+
+.center {
+  margin: 0 auto;
+  position: relative;
+  bottom: 0;
+  grid-column: 2;
+  @media (max-width: 1070px) {
+    grid-column: 1;
+    left: 50%;
+  }
+  @media (max-width: 703px) {
+    left: 0;
+  }
+}

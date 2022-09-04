@@ -1,0 +1,13 @@
+.notFound {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  font-size: 24px;
+  font-weight: 700;
+  text-align: center;
+  @media(max-width: 545px) {
+    font-size: 16px;
+  }
+}

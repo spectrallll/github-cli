@@ -3,15 +3,16 @@ import React from "react";
 import Button from "@components/Button";
 import WithLoader from "@components/WithLoader";
 import api from "@config/api";
+import { RepositoryApi } from "@store/models/gitHub";
 import getStringFromArr from "@utils/getStringFromArr";
 import timeConverter from "@utils/timeConverter";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Repository } from "../../store/repositories";
-import Sample from "./components/Sample";
+import Article from "./components/Article";
+import { ArticleColor } from "./components/Article/Article";
 import styles from "./RepositoryPage.module.scss";
 
-export type FullRepository = Repository & {
+export type FullRepository = RepositoryApi & {
   topics: string[];
   full_name: string;
   created_at: string;
@@ -60,42 +61,44 @@ const RepositoryPage = () => {
             <img src={repository.owner.avatar_url} alt="" />
           </div>
           <div className={styles.data}>
-            <Sample
+            <Article
               title={"Name"}
               text={repository.full_name}
-              color={"secondary"}
+              color={ArticleColor.secondary}
               link={repository.html_url}
             />
-            <Sample
+            <Article
               text={repository.description}
-              color={"secondary"}
+              color={ArticleColor.secondary}
               title={"Description"}
             />
-            <Sample
+            <Article
               text={
                 timeConverter(`${timeConverter(repository.created_at)}`) +
                 " /" +
                 ` ${timeConverter(repository.updated_at)}`
               }
               title={"Created at/Updated at"}
-              color={"secondary"}
+              color={ArticleColor.secondary}
             />
-            <Sample
+            <Article
               text={getStringFromArr(repository.topics)}
-              color={"secondary"}
+              color={ArticleColor.secondary}
               title={"Topics"}
             />
-            <Sample
+            <Article
               text={repository.language}
-              color={"primary"}
+              color={ArticleColor.primary}
               title={"Language"}
             />
-            <Sample
+            <Article
               text={repository.default_branch}
-              color={"primary"}
+              color={ArticleColor.primary}
               title={"Default branch"}
             />
-            <Button onClick={() => navigate("/")}>Back</Button>
+            <Button className={styles.btnRight} onClick={() => navigate("/")}>
+              Back
+            </Button>
           </div>
         </div>
       </WithLoader>

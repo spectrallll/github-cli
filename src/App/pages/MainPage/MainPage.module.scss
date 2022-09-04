@@ -38,33 +38,5 @@
   }
 }
 
-.columns {
 
-  position: relative;
-  overflow: scroll;
-  display: grid;
-  gap: 25px;
-  grid-template-columns: repeat(3, minmax(312px, 1fr));
-  @media (max-width: 1070px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
 
-  @media (max-width: 703px) {
-    grid-template-columns: 100%;
-  }
-
-}
-
-.center {
-  margin: 0 auto;
-  position: relative;
-  bottom: 0;
-  grid-column: 2;
-  @media (max-width: 1070px) {
-    grid-column: 1;
-    left: 50%;
-  }
-  @media (max-width: 703px) {
-    left: 0;
-  }
-}

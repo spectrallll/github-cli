@@ -6,17 +6,9 @@ import {
   linearizeCollection,
   normalizeCollection,
 } from "@store/models/shared/collection";
-import rootStore from "@store/RootStore";
 import { Meta } from "@utils/meta";
 import { ILocalStore } from "@utils/useLocalStore";
-import {
-  action,
-  computed,
-  IReactionDisposer,
-  makeObservable,
-  observable,
-  reaction,
-} from "mobx";
+import { action, computed, makeObservable, observable } from "mobx";
 
 import { Option } from "./types";
 
@@ -49,11 +41,12 @@ class GitHubStore implements ILocalStore {
       _currentPage: observable,
       _value: observable,
       _more: observable,
-      _type: observable,
+      _type: observable.ref,
       repositories: computed,
       meta: computed,
       more: computed,
       value: computed,
+      type: computed,
       setType: action,
       fetchRepos: action,
       fetchData: action,
@@ -78,10 +71,7 @@ class GitHubStore implements ILocalStore {
   }
 
   get type(): Option {
-    return {
-      key: this._type.key,
-      name: this._type.name,
-    };
+    return this._type;
   }
 
   setValue = (value: string) => {
@@ -133,33 +123,32 @@ class GitHubStore implements ILocalStore {
       .then(
         action("fetchSuccess", (res) => {
           try {
-            const data = res.data.map(normalizeRepository);
-            if (data.length === 0) this._more = false;
-            this._repositories = this._repositories.concat(data);
+            const list: RepositoryModel[] = [];
+            for (const item of res.data) {
+              list.push(normalizeRepository(item));
+            }
+            if (res.data.length === 0) this._more = false;
+            this._repositories = normalizeCollection(
+              [...this.repositories, ...list],
+              (item: RepositoryModel) => item.id
+            );
             this._meta = Meta.success;
             this._currentPage = this._currentPage + 1;
           } catch (e) {
             this._meta = Meta.error;
-            this._repositories = [];
+            this._repositories = getInitialCollectionModel();
           }
         }),
         action("fetchError", (err) => {
           this._meta = Meta.error;
-          this._repositories = [];
+          this._repositories = getInitialCollectionModel();
         })
       );
   };
 
   destroy(): void {
-    this._qpReaction();
+    // nothing
   }
-
-  private readonly _qpReaction: IReactionDisposer = reaction(
-    () => rootStore.query.getParam("search"),
-    (search) => {
-      console.log("reaction");
-    }
-  );
 }
 
 export default GitHubStore;

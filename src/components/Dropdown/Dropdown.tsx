@@ -36,9 +36,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   }, [disabled]);
 
   const handleChange = (obj: Option) => {
-    if (currentValue.name === obj.name) {
-      return;
-    } else {
+    if (currentValue.name !== obj.name) {
       onChange(obj);
       setOpen(false);
     }

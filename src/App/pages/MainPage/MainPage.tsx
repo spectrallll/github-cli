@@ -5,12 +5,10 @@ import NotFound from "@components/NotFound";
 import SearchForm from "@components/SearchForm";
 import GitHubStore from "@store/GitHubStore";
 import { Option } from "@store/GitHubStore/GitHubStore";
-import rootStore from "@store/RootStore";
-import { useQueryParamsStoreInit } from "@store/RootStore/hooks/useQueryParamsStoreInit";
 import { Meta } from "@utils/meta";
 import { useLocalStore } from "@utils/useLocalStore";
 import { observer } from "mobx-react-lite";
-import qs from "qs";
+import { useSearchParams } from "react-router-dom";
 
 import RepoList from "./components/RepoList";
 import styles from "./MainPage.module.scss";
@@ -26,7 +24,8 @@ const optionsType: Option[] = [
 
 const MainPage = () => {
   const gitHubStore = useLocalStore(() => new GitHubStore());
-  useQueryParamsStoreInit();
+  const [params, setParams] = useSearchParams({ search: "", type: "all" });
+
   const onSubmit = React.useCallback(
     (e: React.FormEvent) => {
       e.preventDefault();
@@ -35,12 +34,37 @@ const MainPage = () => {
     [gitHubStore]
   );
 
+  const setCurrentParams = (search: string, type: string) => {
+    setParams({ search, type });
+  };
+
   const onChange = React.useCallback(
     (str: string) => {
       gitHubStore.setValue(str);
+      setCurrentParams(str, params.get("type") || "all");
     },
-    [gitHubStore]
+    [gitHubStore, setParams, params]
   );
+
+  const onChangeType = React.useCallback(
+    (type: Option) => {
+      gitHubStore.setType(type);
+      setCurrentParams(params.get("search") || "", type.key);
+    },
+    [gitHubStore, params, setParams]
+  );
+
+  React.useEffect(() => {
+    if (params.get("search")) {
+      gitHubStore.setValue(params.get("search"));
+      if (params.get("type")) {
+        gitHubStore.setType(
+          optionsType.find((obj) => obj.key === params.get("type"))
+        );
+      }
+      gitHubStore.fetchRepos();
+    }
+  }, []);
 
   return (
     <div className={styles.container}>
@@ -54,7 +78,7 @@ const MainPage = () => {
           <Dropdown
             options={optionsType}
             currentValue={gitHubStore.type}
-            onChange={gitHubStore.setType}
+            onChange={onChangeType}
             title={"Type:"}
           />
         </div>

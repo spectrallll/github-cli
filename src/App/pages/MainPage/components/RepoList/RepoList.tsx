@@ -26,7 +26,6 @@ const RepoList: React.FC<RepoListProps> = ({
   state,
 }) => {
   const navigate = useNavigate();
-
   return (
     <InfiniteScroll
       className={styles.columns}

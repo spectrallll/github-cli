@@ -10,6 +10,7 @@ import MainPage from "./pages/MainPage/MainPage";
 import RepositoryPage from "./pages/RepositoryPage/RepositoryPage";
 
 const App = () => {
+  useQueryParamsStoreInit();
   return (
     <>
       <Routes>

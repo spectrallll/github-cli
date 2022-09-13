@@ -22,31 +22,22 @@ type LoaderProps = {
   color?: LoaderColor;
 };
 
-const Loader: React.FC<LoaderProps> = ({ loading, size, className, color }) => {
+const Loader: React.FC<LoaderProps> = ({
+  loading,
+  size = LoaderSize.m,
+  className,
+  color,
+}) => {
   if (loading !== undefined)
     return (
       <>
         {loading && (
-          <div
-            className={classNames(
-              styles.loader,
-              size ? styles[size] : styles.m,
-              className
-            )}
-          />
+          <div className={classNames(styles.loader, styles[size], className)} />
         )}
       </>
     );
 
-  return (
-    <div
-      className={classNames(
-        styles.loader,
-        size ? styles[size] : styles.m,
-        className
-      )}
-    />
-  );
+  return <div className={classNames(styles.loader, styles[size], className)} />;
 };
 
 export default Loader;

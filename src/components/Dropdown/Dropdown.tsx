@@ -36,9 +36,7 @@ const Dropdown: React.FC<DropdownProps> = ({
   }, [disabled]);
 
   const handleChange = (obj: Option) => {
-    if (currentValue.name === obj.name) {
-      return;
-    } else {
+    if (currentValue.name !== obj.name) {
       onChange(obj);
       setOpen(false);
     }
@@ -53,7 +51,7 @@ const Dropdown: React.FC<DropdownProps> = ({
       )}
     >
       <div className={styles.title} onClick={handleClick}>
-        {title} {currentValue?.name}
+        {title} {currentValue.name}
       </div>
       {open && (
         <div className={styles.selectable}>
@@ -63,7 +61,7 @@ const Dropdown: React.FC<DropdownProps> = ({
               onClick={() => handleChange(obj)}
               className={classNames(
                 styles.select,
-                currentValue?.name === obj.name && styles.selected
+                currentValue.name === obj.name && styles.selected
               )}
             >
               {obj.name}
@@ -75,4 +73,4 @@ const Dropdown: React.FC<DropdownProps> = ({
   );
 };
 
-export default Dropdown;
+export default React.memo(Dropdown);

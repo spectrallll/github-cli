@@ -3,38 +3,35 @@ import React from "react";
 import Button from "@components/Button";
 import WithLoader from "@components/WithLoader";
 import api from "@config/api";
+import {
+  FullRepository,
+  normalizeFullRepository,
+  RepositoryOwnerModel,
+} from "@store/models/gitHub";
 import getStringFromArr from "@utils/getStringFromArr";
 import timeConverter from "@utils/timeConverter";
 import { useNavigate, useParams } from "react-router-dom";
 
-import { Repository } from "../../store/repositories";
-import Sample from "./components/Sample";
+import Article from "./components/Article";
+import { ArticleColor } from "./components/Article/Article";
 import styles from "./RepositoryPage.module.scss";
-
-export type FullRepository = Repository & {
-  topics: string[];
-  full_name: string;
-  created_at: string;
-  default_branch: string;
-  language: string;
-  description: string;
-};
 
 const RepositoryPage = () => {
   const [loading, setLoading] = React.useState(false);
 
   const [repository, setRepository] = React.useState<FullRepository>({
-    created_at: "",
-    default_branch: "",
-    description: "",
-    full_name: "",
-    html_url: "",
-    language: "",
+    id: 0,
     name: "",
-    owner: { avatar_url: "", html_url: "", login: "" },
-    stargazers_count: "",
+    updatedAt: "",
+    htmlUrl: "",
+    owner: {} as RepositoryOwnerModel,
+    stargazersCount: "",
     topics: [],
-    updated_at: "",
+    fullName: "",
+    defaultBranch: "",
+    description: "",
+    language: "",
+    createdAt: "",
   });
 
   const { owner, repo } = useParams();
@@ -45,7 +42,8 @@ const RepositoryPage = () => {
       setLoading(true);
       if (owner && repo) {
         const { data } = await api.fetchOne(owner, repo);
-        setRepository(data);
+
+        setRepository(normalizeFullRepository(data));
       }
       setLoading(false);
     };
@@ -57,45 +55,47 @@ const RepositoryPage = () => {
       <WithLoader loading={loading} className={styles.center}>
         <div className={styles.card}>
           <div className={styles.image}>
-            <img src={repository.owner.avatar_url} alt="" />
+            <img src={repository.owner.avatarUrl} alt="" />
           </div>
           <div className={styles.data}>
-            <Sample
+            <Article
               title={"Name"}
-              text={repository.full_name}
-              color={"secondary"}
-              link={repository.html_url}
+              text={repository.fullName}
+              color={ArticleColor.secondary}
+              link={repository.htmlUrl}
             />
-            <Sample
+            <Article
               text={repository.description}
-              color={"secondary"}
+              color={ArticleColor.secondary}
               title={"Description"}
             />
-            <Sample
+            <Article
               text={
-                timeConverter(`${timeConverter(repository.created_at)}`) +
+                timeConverter(`${timeConverter(repository.createdAt)}`) +
                 " /" +
-                ` ${timeConverter(repository.updated_at)}`
+                ` ${timeConverter(repository.updatedAt)}`
               }
               title={"Created at/Updated at"}
-              color={"secondary"}
+              color={ArticleColor.secondary}
             />
-            <Sample
+            <Article
               text={getStringFromArr(repository.topics)}
-              color={"secondary"}
+              color={ArticleColor.secondary}
               title={"Topics"}
             />
-            <Sample
+            <Article
               text={repository.language}
-              color={"primary"}
+              color={ArticleColor.primary}
               title={"Language"}
             />
-            <Sample
-              text={repository.default_branch}
-              color={"primary"}
+            <Article
+              text={repository.defaultBranch}
+              color={ArticleColor.primary}
               title={"Default branch"}
             />
-            <Button onClick={() => navigate("/")}>Back</Button>
+            <Button className={styles.btnRight} onClick={() => navigate(-1)}>
+              Back
+            </Button>
           </div>
         </div>
       </WithLoader>

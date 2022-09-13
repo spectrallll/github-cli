@@ -6,7 +6,7 @@ import SearchButton from "@components/SearchButton";
 import styles from "./SearchForm.module.scss";
 
 type SearchFormProps = {
-  handleSubmit: (value: string) => void;
+  handleSubmit: () => void;
   value: string;
   inputChange: (value: string) => void;
 } & React.HTMLProps<HTMLFormElement>;
@@ -17,13 +17,8 @@ const SearchForm: React.FC<SearchFormProps> = ({
   inputChange,
   ...rest
 }) => {
-  const handle = (e: React.FormEvent) => {
-    e.preventDefault();
-    handleSubmit(value);
-  };
-
   return (
-    <form className={styles.form} onSubmit={handle}>
+    <form className={styles.form} onSubmit={handleSubmit}>
       <Input
         placeholder={"Введите название организации"}
         onChange={inputChange}
@@ -34,4 +29,4 @@ const SearchForm: React.FC<SearchFormProps> = ({
   );
 };
 
-export default SearchForm;
+export default React.memo(SearchForm);

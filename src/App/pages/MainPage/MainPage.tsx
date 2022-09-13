@@ -1,22 +1,17 @@
 import React from "react";
 
-import Card from "@components/Card";
 import Dropdown from "@components/Dropdown";
-import Loader from "@components/Loader";
-import { LoaderSize } from "@components/Loader/Loader";
 import NotFound from "@components/NotFound";
 import SearchForm from "@components/SearchForm";
-import timeConverter from "@utils/timeConverter";
+import GitHubStore from "@store/GitHubStore";
+import { Option } from "@store/GitHubStore";
+import { Meta } from "@utils/meta";
+import { useLocalStore } from "@utils/useLocalStore";
 import { observer } from "mobx-react-lite";
-import InfiniteScroll from "react-infinite-scroll-component";
-import { useNavigate } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 
-import Repositories, { Option } from "../../store/repositories";
+import RepoList from "./components/RepoList";
 import styles from "./MainPage.module.scss";
-
-type MainPageProps = {
-  store: typeof Repositories;
-};
 
 const optionsType: Option[] = [
   { key: "all", name: "All" },
@@ -27,80 +22,71 @@ const optionsType: Option[] = [
   { key: "internal", name: "Internal" },
 ];
 
-const MainPage: React.FC<MainPageProps> = observer(({ store }) => {
-  const {
-    repositories,
-    fetchRepos,
-    value,
-    setValue,
-    type,
-    setType,
-    state,
-    more,
-    fetchData,
-  } = store;
+const MainPage = () => {
+  const gitHubStore = useLocalStore(() => new GitHubStore());
+  const [params, setParams] = useSearchParams({ search: "", type: "all" });
 
-  const firstFetch = React.useRef(false);
-  const navigate = useNavigate();
+  const onSubmit = React.useCallback(
+    (e: React.FormEvent) => {
+      e.preventDefault();
+      gitHubStore.fetchRepos();
+    },
+    [gitHubStore]
+  );
+
+  const onChange = React.useCallback(
+    (str: string) => {
+      gitHubStore.setValue(str);
+      setParams({ search: str || "", type: params.get("type") || "all" });
+    },
+    [gitHubStore, setParams, params]
+  );
+
+  const onChangeType = React.useCallback(
+    (type: Option) => {
+      gitHubStore.setType(type);
+      setParams({ search: params.get("search") || "", type: type.key });
+    },
+    [gitHubStore, params, setParams]
+  );
 
   React.useEffect(() => {
-    if (!firstFetch.current) {
-      firstFetch.current = true;
-    } else {
-      fetchRepos();
+    if (params.get("search")) {
+      gitHubStore.setValue(params.get("search"));
+      if (params.get("type")) {
+        gitHubStore.setType(
+          optionsType.find((obj) => obj.key === params.get("type"))
+        );
+      }
+      gitHubStore.fetchRepos();
     }
-  }, [type]);
+  }, []);
 
   return (
     <div className={styles.container}>
       <div className={styles.filters}>
         <SearchForm
-          handleSubmit={fetchRepos}
-          value={value}
-          inputChange={(value: string) => setValue(value)}
+          handleSubmit={onSubmit}
+          value={gitHubStore.value}
+          inputChange={onChange}
         />
         <div className={styles.sort}>
           <Dropdown
             options={optionsType}
-            currentValue={type}
-            onChange={setType}
+            currentValue={gitHubStore.type}
+            onChange={onChangeType}
             title={"Type:"}
           />
         </div>
       </div>
       <div className={styles.repos}>
-        <InfiniteScroll
-          className={styles.columns}
-          next={fetchData}
-          hasMore={more}
-          loader={
-            state === "pending" && (
-              <Loader size={LoaderSize.l} className={styles.center} />
-            )
-          }
-          dataLength={repositories.length}
-        >
-          {repositories.map((obj) => {
-            return (
-              <Card
-                key={obj.name}
-                image={obj.owner.avatar_url}
-                title={obj.name}
-                subtitle={obj.owner.login}
-                updatedAt={timeConverter(obj.updated_at)}
-                link={obj.owner.html_url}
-                stars={obj.stargazers_count}
-                onClick={(e) => {
-                  navigate(`${obj.owner.login}/${obj.name}`);
-                }}
-              />
-            );
-          })}
-        </InfiniteScroll>
-        {state === "error" && <NotFound text={`Organisation not found 😕`} />}
+        <RepoList store={gitHubStore} />
+        {gitHubStore.meta === Meta.error && (
+          <NotFound text={`Organisation not found 😕`} />
+        )}
       </div>
     </div>
   );
-});
+};
 
-export default MainPage;
+export default observer(MainPage);

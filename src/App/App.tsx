@@ -1,24 +1,24 @@
 import React from "react";
 
 import "@styles/app.scss";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import qs from "qs";
+import { Route, Routes } from "react-router-dom";
 
 import MainLayout from "../layouts/MainLayout";
+import { useQueryParamsStoreInit } from "../store/RootStore/hooks/useQueryParamsStoreInit";
 import MainPage from "./pages/MainPage/MainPage";
 import RepositoryPage from "./pages/RepositoryPage/RepositoryPage";
-import Repositories from "./store/repositories";
 
 const App = () => {
+  useQueryParamsStoreInit();
   return (
     <>
-      <BrowserRouter>
-        <Routes>
-          <Route path="/" element={<MainLayout />}>
-            <Route path="/" element={<MainPage store={Repositories} />} />
-            <Route path="/:owner/:repo" element={<RepositoryPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route path="/" element={<MainPage />} />
+          <Route path="/:owner/:repo" element={<RepositoryPage />} />
+        </Route>
+      </Routes>
     </>
   );
 };

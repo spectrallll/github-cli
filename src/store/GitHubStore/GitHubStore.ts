@@ -94,7 +94,7 @@ class GitHubStore implements ILocalStore {
       .then(
         action("fetchSuccess", (res) => {
           try {
-            const list: RepositoryModel = [];
+            const list: RepositoryModel[] = [];
             for (const item of res.data) {
               list.push(normalizeRepository(item));
             }

@@ -52,10 +52,10 @@ const MainPage = () => {
 
   React.useEffect(() => {
     if (params.get("search")) {
-      gitHubStore.setValue(params.get("search"));
+      gitHubStore.setValue(params.get("search") || "");
       if (params.get("type")) {
         gitHubStore.setType(
-          optionsType.find((obj) => obj.key === params.get("type"))
+          optionsType.find((obj) => obj.key === params.get("type")) || { key: "all", name: "All"}
         );
       }
       gitHubStore.fetchRepos();

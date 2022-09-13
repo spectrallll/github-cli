@@ -6,7 +6,7 @@ import SearchButton from "@components/SearchButton";
 import styles from "./SearchForm.module.scss";
 
 type SearchFormProps = {
-  handleSubmit: () => void;
+  handleSubmit: (e: React.FormEvent) => void;
   value: string;
   inputChange: (value: string) => void;
 } & React.HTMLProps<HTMLFormElement>;

@@ -8,7 +8,7 @@ type CardProps = {
   subtitle: React.ReactNode;
   link?: string;
   content?: React.ReactNode;
-  onClick?: React.MouseEventHandler;
+  onClick?: (login: string, name: string) => void;
   updatedAt?: string;
   stars?: string;
 };
@@ -16,7 +16,10 @@ type CardProps = {
 const Card: React.FC<CardProps> = React.memo(
   ({ image, title, subtitle, content, onClick, updatedAt, link, stars }) => {
     return (
-      <article className={styles.card} onClick={onClick}>
+      <article
+        className={styles.card}
+        onClick={() => onClick && onClick(`${subtitle}`, `${title}`)}
+      >
         <div className={styles.cardImage}>
           <img src={image} alt="card-img" />
         </div>

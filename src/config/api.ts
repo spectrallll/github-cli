@@ -1,5 +1,6 @@
-import { Option } from "@store/GitHubStore/types";
-import { FullRepositoryApi, RepositoryApi } from "@store/models/gitHub";
+import { Option } from "@store/GitHubStore";
+import { RepositoryApi } from "@store/models/gitHub";
+import { FullRepositoryApi } from "@store/models/gitHub";
 import axios from "axios";
 
 export const instance = axios.create({
@@ -11,8 +12,8 @@ class API {
     value: string,
     type: Option,
     currentPage: number
-  ): Promise<RepositoryApi> => {
-    return instance.get<RepositoryApi[]>(
+  ): Promise<{ data: RepositoryApi[] }> => {
+    return instance.get(
       `orgs/${value}/repos?&type=${type.key}&per_page=21&page=${currentPage}`
     );
   };
@@ -20,7 +21,7 @@ class API {
   fetchOne = async (
     owner: string,
     repo: string
-  ): Promise<FullRepositoryApi> => {
+  ): Promise<{ data: FullRepositoryApi }> => {
     return instance.get<FullRepositoryApi>(`repos/${owner}/${repo}`);
   };
 }

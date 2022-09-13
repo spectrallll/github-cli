@@ -1,12 +1,12 @@
 export type RepositoryOwnerApi = {
-  id: number;
+  id: number | string;
   avatar_url: string;
   login: string;
   html_url: string;
 };
 
 export type RepositoryOwnerModel = {
-  id: number;
+  id: number | string;
   avatarUrl: string;
   login: string;
   htmlUrl: string;

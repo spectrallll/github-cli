@@ -3,7 +3,11 @@ import React from "react";
 import Button from "@components/Button";
 import WithLoader from "@components/WithLoader";
 import api from "@config/api";
-import { RepositoryApi } from "@store/models/gitHub";
+import {
+  FullRepository,
+  normalizeFullRepository,
+  RepositoryOwnerModel,
+} from "@store/models/gitHub";
 import getStringFromArr from "@utils/getStringFromArr";
 import timeConverter from "@utils/timeConverter";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,30 +16,22 @@ import Article from "./components/Article";
 import { ArticleColor } from "./components/Article/Article";
 import styles from "./RepositoryPage.module.scss";
 
-export type FullRepository = RepositoryApi & {
-  topics: string[];
-  full_name: string;
-  created_at: string;
-  default_branch: string;
-  language: string;
-  description: string;
-};
-
 const RepositoryPage = () => {
   const [loading, setLoading] = React.useState(false);
 
   const [repository, setRepository] = React.useState<FullRepository>({
-    created_at: "",
-    default_branch: "",
-    description: "",
-    full_name: "",
-    html_url: "",
-    language: "",
+    id: 0,
     name: "",
-    owner: { avatar_url: "", html_url: "", login: "" },
-    stargazers_count: "",
+    updatedAt: "",
+    htmlUrl: "",
+    owner: {} as RepositoryOwnerModel,
+    stargazersCount: "",
     topics: [],
-    updated_at: "",
+    fullName: "",
+    defaultBranch: "",
+    description: "",
+    language: "",
+    createdAt: "",
   });
 
   const { owner, repo } = useParams();
@@ -46,7 +42,8 @@ const RepositoryPage = () => {
       setLoading(true);
       if (owner && repo) {
         const { data } = await api.fetchOne(owner, repo);
-        setRepository(data);
+
+        setRepository(normalizeFullRepository(data));
       }
       setLoading(false);
     };
@@ -58,14 +55,14 @@ const RepositoryPage = () => {
       <WithLoader loading={loading} className={styles.center}>
         <div className={styles.card}>
           <div className={styles.image}>
-            <img src={repository.owner.avatar_url} alt="" />
+            <img src={repository.owner.avatarUrl} alt="" />
           </div>
           <div className={styles.data}>
             <Article
               title={"Name"}
-              text={repository.full_name}
+              text={repository.fullName}
               color={ArticleColor.secondary}
-              link={repository.html_url}
+              link={repository.htmlUrl}
             />
             <Article
               text={repository.description}
@@ -74,9 +71,9 @@ const RepositoryPage = () => {
             />
             <Article
               text={
-                timeConverter(`${timeConverter(repository.created_at)}`) +
+                timeConverter(`${timeConverter(repository.createdAt)}`) +
                 " /" +
-                ` ${timeConverter(repository.updated_at)}`
+                ` ${timeConverter(repository.updatedAt)}`
               }
               title={"Created at/Updated at"}
               color={ArticleColor.secondary}
@@ -92,11 +89,11 @@ const RepositoryPage = () => {
               title={"Language"}
             />
             <Article
-              text={repository.default_branch}
+              text={repository.defaultBranch}
               color={ArticleColor.primary}
               title={"Default branch"}
             />
-            <Button className={styles.btnRight} onClick={() => navigate("/")}>
+            <Button className={styles.btnRight} onClick={() => navigate(-1)}>
               Back
             </Button>
           </div>

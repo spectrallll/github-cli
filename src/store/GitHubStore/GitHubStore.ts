@@ -1,4 +1,5 @@
 import Api from "@config/api";
+import { Option } from "@store/GitHubStore";
 import { normalizeRepository, RepositoryModel } from "@store/models/gitHub";
 import {
   CollectionModel,
@@ -9,8 +10,6 @@ import {
 import { Meta } from "@utils/meta";
 import { ILocalStore } from "@utils/useLocalStore";
 import { action, computed, makeObservable, observable } from "mobx";
-
-import { Option } from "./types";
 
 type PrivateFields =
   | "_repositories"
@@ -128,8 +127,10 @@ class GitHubStore implements ILocalStore {
               list.push(normalizeRepository(item));
             }
             if (res.data.length === 0) this._more = false;
+            const data = this.repositories;
+            this._repositories = getInitialCollectionModel();
             this._repositories = normalizeCollection(
-              [...this.repositories, ...list],
+              [...data, ...list],
               (item: RepositoryModel) => item.id
             );
             this._meta = Meta.success;
@@ -139,7 +140,7 @@ class GitHubStore implements ILocalStore {
             this._repositories = getInitialCollectionModel();
           }
         }),
-        action("fetchError", (err) => {
+        action("fetchError", () => {
           this._meta = Meta.error;
           this._repositories = getInitialCollectionModel();
         })

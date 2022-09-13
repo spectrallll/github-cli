@@ -4,7 +4,7 @@ import Dropdown from "@components/Dropdown";
 import NotFound from "@components/NotFound";
 import SearchForm from "@components/SearchForm";
 import GitHubStore from "@store/GitHubStore";
-import { Option } from "@store/GitHubStore/GitHubStore";
+import { Option } from "@store/GitHubStore";
 import { Meta } from "@utils/meta";
 import { useLocalStore } from "@utils/useLocalStore";
 import { observer } from "mobx-react-lite";
@@ -34,14 +34,10 @@ const MainPage = () => {
     [gitHubStore]
   );
 
-  const setCurrentParams = (search: string, type: string) => {
-    setParams({ search, type });
-  };
-
   const onChange = React.useCallback(
     (str: string) => {
       gitHubStore.setValue(str);
-      setCurrentParams(str, params.get("type") || "all");
+      setParams({ search: str || "", type: params.get("type") || "all" });
     },
     [gitHubStore, setParams, params]
   );
@@ -49,7 +45,7 @@ const MainPage = () => {
   const onChangeType = React.useCallback(
     (type: Option) => {
       gitHubStore.setType(type);
-      setCurrentParams(params.get("search") || "", type.key);
+      setParams({ search: params.get("search") || "", type: type.key });
     },
     [gitHubStore, params, setParams]
   );
@@ -84,12 +80,7 @@ const MainPage = () => {
         </div>
       </div>
       <div className={styles.repos}>
-        <RepoList
-          repositories={gitHubStore.repositories}
-          more={gitHubStore.more}
-          state={gitHubStore.meta}
-          fetchData={gitHubStore.fetchData}
-        />
+        <RepoList store={gitHubStore} />
         {gitHubStore.meta === Meta.error && (
           <NotFound text={`Organisation not found 😕`} />
         )}

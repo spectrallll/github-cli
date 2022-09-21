@@ -15,6 +15,7 @@ import { useNavigate, useParams } from "react-router-dom";
 import Article from "./components/Article";
 import { ArticleColor } from "./components/Article/Article";
 import styles from "./RepositoryPage.module.scss";
+import Topics from "./components/Topics";
 
 const RepositoryPage = () => {
   const [loading, setLoading] = React.useState(false);
@@ -52,50 +53,48 @@ const RepositoryPage = () => {
 
   return (
     <div className={styles.main}>
+      <div className={styles.left}>
+        <Button className={styles.btn} onClick={() => navigate(-1)}>
+          Back
+        </Button>
+      </div>
       <WithLoader loading={loading} className={styles.center}>
         <div className={styles.card}>
           <div className={styles.image}>
-            <img src={repository.owner.avatarUrl} alt="" />
+            <img src={repository.owner.avatarUrl} alt="repo_image" />
+            <div>
+              <Topics data={repository.topics} />
+            </div>
           </div>
           <div className={styles.data}>
             <Article
-              title={"Name"}
-              text={repository.fullName}
+              data={
+                <a href={repository.htmlUrl} target="_blank">
+                  {repository.fullName}
+                </a>
+              }
               color={ArticleColor.secondary}
-              link={repository.htmlUrl}
             />
             <Article
-              text={repository.description}
+              data={repository.description}
               color={ArticleColor.secondary}
-              title={"Description"}
             />
             <Article
-              text={
+              data={
                 timeConverter(`${timeConverter(repository.createdAt)}`) +
                 " /" +
                 ` ${timeConverter(repository.updatedAt)}`
               }
-              title={"Created at/Updated at"}
               color={ArticleColor.secondary}
             />
             <Article
-              text={getStringFromArr(repository.topics)}
-              color={ArticleColor.secondary}
-              title={"Topics"}
+              data={repository.language}
+              color={ArticleColor.primary}
             />
             <Article
-              text={repository.language}
+              data={repository.defaultBranch}
               color={ArticleColor.primary}
-              title={"Language"}
             />
-            <Article
-              text={repository.defaultBranch}
-              color={ArticleColor.primary}
-              title={"Default branch"}
-            />
-            <Button className={styles.btnRight} onClick={() => navigate(-1)}>
-              Back
-            </Button>
           </div>
         </div>
       </WithLoader>

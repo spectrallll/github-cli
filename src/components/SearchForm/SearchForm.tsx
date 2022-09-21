@@ -24,7 +24,6 @@ const SearchForm: React.FC<SearchFormProps> = ({
         onChange={inputChange}
         value={value}
       />
-      <SearchButton type="submit" />
     </form>
   );
 };

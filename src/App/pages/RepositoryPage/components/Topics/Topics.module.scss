@@ -1,0 +1,13 @@
+@import "@styles/variables";
+
+.topics {
+  @include gray-border(1px, 6px);
+  width: 100%;
+  height: auto;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  div {
+    margin-bottom: 5px;
+  }
+}

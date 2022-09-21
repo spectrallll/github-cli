@@ -2,10 +2,21 @@
 
 .sample {
   width: 100%;
-  padding: 17px 12px;
+  padding: 17px;
   line-height: 114%;
-  color: $light-gray;
   @include gray-border(1px, 6px);
+  position: relative;
+
+  &::before {
+    position: absolute;
+    content: "";
+    left: 0;
+    top: 0;
+    width: 6px;
+    height: 100%;
+    background-color: $light-gray;
+    border-radius: 5px 0 0 5px;
+  }
 
   .title {
     color: black;
@@ -18,9 +29,18 @@
     color: #208FBF;
   }
 
-
-}
-
-.primary {
-  border: 1px solid $primary;
+  .primary {
+    border: 1px solid $primary;
+    position: relative;
+    &::before {
+      position: absolute;
+      content: "";
+      left: 0;
+      top: 0;
+      width: 6px;
+      height: 100%;
+      background-color: $light-gray;
+      border-radius: 5px 0 0 5px;
+    }
+  }
 }

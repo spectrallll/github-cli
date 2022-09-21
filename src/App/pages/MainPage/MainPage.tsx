@@ -12,7 +12,6 @@ import { useSearchParams } from "react-router-dom";
 import RepoList from "./components/RepoList";
 import styles from "./MainPage.module.scss";
 import Input from "@components/Input";
-import { useQueryParamsStoreInit } from "@store/RootStore/hooks/useQueryParamsStoreInit";
 
 const optionsType: Option[] = [
   { key: "all", name: "All" },

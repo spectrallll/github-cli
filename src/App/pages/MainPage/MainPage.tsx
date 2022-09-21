@@ -43,10 +43,6 @@ const MainPage = () => {
   );
 
   React.useEffect(() => {
-    gitHubStore.setValue(params.get("search") || "")
-  }, [gitHubStore.value])
-
-  React.useEffect(() => {
     if (params.get("search")) {
       gitHubStore.setValue(params.get("search") || "");
       if (params.get("type")) {

@@ -10,6 +10,23 @@
   }
 }
 
+.left {
+  position: absolute;
+  left: 60px;
+  top: 25px;
+  @media (max-width: 767px) {
+    left: unset;
+    right: 25px;
+    top: 50px;
+  }
+}
+
+.btn {
+  @media (max-width: 545px) {
+    height: 45px;
+  }
+}
+
 .card {
   padding: 45px;
   display: flex;
@@ -17,13 +34,17 @@
 
   @media (max-width: 767px) {
     flex-direction: column;
+    padding: 15px;
   }
 
   .image {
+    display: flex;
+    flex-direction: column;
     img {
-      width: 100%;
-      height: auto;
+      width: 121px;
+      height: 121px;
       object-fit: cover;
+      margin-bottom: 5px;
     }
 
     @media (max-width: 767px) {
@@ -40,10 +61,6 @@
     align-items: center;
     flex-direction: column;
     gap: 15px;
-
-    .btnRight {
-      margin-right: auto;
-    }
   }
 }
 

@@ -37,6 +37,11 @@ const RepoList: React.FC<RepoListProps> = ({ store }) => {
         )
       }
       dataLength={store.repositories.length}
+      endMessage={
+        <p className={styles.endMessage}>
+          {store.repositories.length} repositories was loaded
+        </p>
+      }
     >
       {store.repositories.map((obj) => {
         return (

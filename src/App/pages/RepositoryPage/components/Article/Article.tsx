@@ -10,13 +10,12 @@ export enum ArticleColor {
 }
 
 type ArticleProps = {
-  text: string;
+  data: string | React.ReactNode;
   color: ArticleColor;
-  title: string;
   link?: string;
 };
 
-const Article: React.FC<ArticleProps> = ({ text, color, title, link }) => {
+const Article: React.FC<ArticleProps> = ({ data, color, link }) => {
   return (
     <div
       className={classNames(
@@ -24,14 +23,7 @@ const Article: React.FC<ArticleProps> = ({ text, color, title, link }) => {
         color === ArticleColor.primary && styles.primary
       )}
     >
-      <span className={styles.title}>{title}</span>:{" "}
-      {link ? (
-        <a href={link} target={"_blank"} rel="noreferrer">
-          {text}
-        </a>
-      ) : (
-        text
-      )}
+      {data}
     </div>
   );
 };

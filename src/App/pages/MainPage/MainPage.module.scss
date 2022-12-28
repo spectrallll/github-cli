@@ -17,10 +17,11 @@
 
 .filters {
   grid-area: form;
+  display: flex;
 }
 
-.sort {
-  margin-top: 15px;
+.search {
+  margin-right: 15px;
 }
 
 .repos {

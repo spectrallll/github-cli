@@ -2,7 +2,6 @@ import React from "react";
 
 import Dropdown from "@components/Dropdown";
 import NotFound from "@components/NotFound";
-import SearchForm from "@components/SearchForm";
 import GitHubStore from "@store/GitHubStore";
 import { Option } from "@store/GitHubStore";
 import { Meta } from "@utils/meta";
@@ -12,6 +11,7 @@ import { useSearchParams } from "react-router-dom";
 
 import RepoList from "./components/RepoList";
 import styles from "./MainPage.module.scss";
+import Input from "@components/Input";
 
 const optionsType: Option[] = [
   { key: "all", name: "All" },
@@ -24,22 +24,14 @@ const optionsType: Option[] = [
 
 const MainPage = () => {
   const gitHubStore = useLocalStore(() => new GitHubStore());
-  const [params, setParams] = useSearchParams({ search: "", type: "all" });
-
-  const onSubmit = React.useCallback(
-    (e: React.FormEvent) => {
-      e.preventDefault();
-      gitHubStore.fetchRepos();
-    },
-    [gitHubStore]
-  );
+  const [params, setParams] = useSearchParams();
 
   const onChange = React.useCallback(
     (str: string) => {
       gitHubStore.setValue(str);
       setParams({ search: str || "", type: params.get("type") || "all" });
     },
-    [gitHubStore, setParams, params]
+    [setParams, params]
   );
 
   const onChangeType = React.useCallback(
@@ -52,32 +44,30 @@ const MainPage = () => {
 
   React.useEffect(() => {
     if (params.get("search")) {
-      gitHubStore.setValue(params.get("search"));
+      gitHubStore.setValue(params.get("search") || "");
       if (params.get("type")) {
         gitHubStore.setType(
-          optionsType.find((obj) => obj.key === params.get("type"))
+          optionsType.find((obj) => obj.key === params.get("type")) || { key: "all", name: "All"}
         );
       }
-      gitHubStore.fetchRepos();
     }
   }, []);
 
   return (
     <div className={styles.container}>
       <div className={styles.filters}>
-        <SearchForm
-          handleSubmit={onSubmit}
+        <Input
           value={gitHubStore.value}
-          inputChange={onChange}
+          onChange={onChange}
+          className={styles.search}
+          placeholder={"Введите название организации..."}
         />
-        <div className={styles.sort}>
-          <Dropdown
-            options={optionsType}
-            currentValue={gitHubStore.type}
-            onChange={onChangeType}
-            title={"Type:"}
-          />
-        </div>
+        <Dropdown
+          options={optionsType}
+          currentValue={gitHubStore.type}
+          onChange={onChangeType}
+          title={"Type:"}
+        />
       </div>
       <div className={styles.repos}>
         <RepoList store={gitHubStore} />

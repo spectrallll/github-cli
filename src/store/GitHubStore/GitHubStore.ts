@@ -9,7 +9,9 @@ import {
 } from "@store/models/shared/collection";
 import { Meta } from "@utils/meta";
 import { ILocalStore } from "@utils/useLocalStore";
-import { action, computed, makeObservable, observable } from "mobx";
+import { action, computed, makeObservable, observable, reaction } from "mobx";
+import { debounce } from "@utils/debounce";
+import rootStore from "@store/RootStore";
 
 type PrivateFields =
   | "_repositories"
@@ -49,7 +51,7 @@ class GitHubStore implements ILocalStore {
       setType: action,
       fetchRepos: action,
       fetchData: action,
-      setValue: action,
+      setValue: action
     });
   }
 
@@ -94,7 +96,7 @@ class GitHubStore implements ILocalStore {
       .then(
         action("fetchSuccess", (res) => {
           try {
-            const list: RepositoryModel = [];
+            const list: RepositoryModel[] = [];
             for (const item of res.data) {
               list.push(normalizeRepository(item));
             }
@@ -146,6 +148,12 @@ class GitHubStore implements ILocalStore {
         })
       );
   };
+
+  private _debounceSearch = debounce(action(this.fetchRepos), 300);
+
+  private _qpReaction = reaction(() => rootStore.query.getParam("search"), () => {
+    this._debounceSearch();
+  });
 
   destroy(): void {
     // nothing

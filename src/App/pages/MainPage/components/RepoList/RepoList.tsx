@@ -2,13 +2,13 @@ import React from "react";
 
 import Card from "@components/Card";
 import Loader from "@components/Loader";
-import { LoaderSize } from "@components/Loader/Loader";
+import {LoaderSize} from "@components/Loader/Loader";
 import GitHubStore from "@store/GitHubStore";
-import { Meta } from "@utils/meta";
+import {Meta} from "@utils/meta";
 import timeConverter from "@utils/timeConverter";
-import { observer } from "mobx-react-lite";
+import {observer} from "mobx-react-lite";
 import InfiniteScroll from "react-infinite-scroll-component";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 import styles from "./RepoList.module.scss";
 
@@ -39,7 +39,7 @@ const RepoList: React.FC<RepoListProps> = ({ store }) => {
       dataLength={store.repositories.length}
       endMessage={
         <p className={styles.endMessage}>
-          {store.repositories.length} repositories was loaded
+            {store.meta === Meta.success && `${store.repositories.length} repositories was loaded`}
         </p>
       }
     >
